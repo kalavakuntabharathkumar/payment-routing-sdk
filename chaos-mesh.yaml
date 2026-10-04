@@ -1,0 +1,29 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: payment-routing-delay
+  namespace: default
+spec:
+  action: delay
+  delay:
+    latency: '500ms'
+    correlation: '20%'
+    jitter: '100ms'
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: payment-routing-sdk
+  mode: all
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: HttpChaos
+metadata:
+  name: payment-routing-psp-timeout
+  namespace: default
+spec:
+  action: delay
+  target:
+    kind: Pod
+    name: payment-routing-sdk
+  mode: all
